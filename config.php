@@ -11,10 +11,10 @@ $enableSandbox = true;
 // PayPal settings. Change these to your account details and the relevant URLs
 // for your site.
 $paypalConfig = [
-    'client_id' => 'your paypal client id',
-    'client_secret' => 'your paypal secret id',
-    'return_url' => 'http://localhost/How-to-Integrate-PayPal-REST-API-Payment-Gateway-in-PHP-main/response.php',
-    'cancel_url' => 'http://localhost/How-to-Integrate-PayPal-REST-API-Payment-Gateway-in-PHP-main/payment-cancelled.html'
+    'client_id' => 'ASPjmE7Dnw91MlojN_wxJh9AQddYMfQoTKahhYhACgZrJxL76chZG2-sal4I7Ro1KHZ9l283HczUnmrx',
+    'client_secret' => 'EMtRPC62l7kdJZo7-yKa6lhzpgPG_pYLQ6tAukhmcW4sxg0hIlJKK1H1mbX4jZzelOd_L7wLfSPBy0Fs',
+    'return_url' => 'http://localhost/gatway/response.php',
+    'cancel_url' => 'http://localhost/gatway/payment-cancelled.html'
 ];
 
 // Database settings. Change these for your database configuration.

@@ -24,6 +24,7 @@ include_once 'db_connection.php';
           <input type="hidden" name="item_number" value="<?php echo $row['id']; ?>" >
           <input type="hidden" name="item_name" value="<?php echo $row['name']; ?>" >
           <input type="hidden" name="amount" value="<?php echo $row['price']; ?>" >
+          <input type="hidden" name="recipient_name" value="Aman" >
           <input type="hidden" name="currency_code" value="USD" >
           <input type="submit" name="submit" value="Buy Now" class="btn__default">
         </form>
