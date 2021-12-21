@@ -1,8 +1,11 @@
 <?php
+
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 
-require 'config.php';
+date_default_timezone_set('Asia/Kolkata');
+
+require 'pconfig.php';
 
 if (empty($_GET['paymentId']) || empty($_GET['PayerID'])) {
     throw new Exception('The response is missing the paymentId and PayerID');
@@ -22,33 +25,34 @@ try {
         $db = new mysqli($dbConfig['host'], $dbConfig['username'], $dbConfig['password'], $dbConfig['name']);
 
         $payment = Payment::get($paymentId, $apiContext);
-
+        // $obj = json_decode($payment);
+        // echo "<pre>";
+        // print_r($obj);
+        // echo "</pre>";
         $data = [
             'product_id' => $payment->transactions[0]->item_list->items[0]->sku,
-            'transaction_id' => $payment->getId(),
+            'transaction_id' => $payment->transactions[0]->related_resources[0]->sale->id,
             'payment_amount' => $payment->transactions[0]->amount->total,
             'currency_code' => $payment->transactions[0]->amount->currency,
-            'payment_status' => $payment->getState(),
+            'payment_status' => $payment->transactions[0]->related_resources[0]->sale->state,
             'invoice_id' => $payment->transactions[0]->invoice_number,
             'product_name' => $payment->transactions[0]->item_list->items[0]->name,
-			'description' => $payment->transactions[0]->description,
+            'description' => $payment->transactions[0]->description,
         ];
-        if (addPayment($data) !== false && $data['payment_status'] === 'approved') {
+        if (addPayment($data) !== false && $data['payment_status'] === 'completed') {
             // Payment successfully added, redirect to the payment complete page.
-			$inserids =$db->insert_id;
-            header("location:http://localhost/gatway/PaypalSuccess.php?payid=$inserids");
+            $inserids = $db->insert_id;
+            header("location:http://localhost/htdocs/gatway/PaypalSuccess.php?payid=$inserids");
             exit(1);
         } else {
             // Payment failed
-			header("location:http://localhost/gatway/PaypalFailed.php");
-             exit(1);
+            header("location:http://localhost/htdocs/gatway/PaypalFailed.php");
+            exit(1);
         }
-
     } catch (Exception $e) {
         // Failed to retrieve payment from PayPal
 
     }
-
 } catch (Exception $e) {
     // Failed to take payment
 
@@ -64,8 +68,9 @@ function addPayment($data)
 {
     global $db;
 
+
     if (is_array($data)) {
-		//'isdsssss' --- i - integer, d - double, s - string, b - BLOB
+        //'isdsssss' --- i - integer, d - double, s - string, b - BLOB
         $stmt = $db->prepare('INSERT INTO `payments` (product_id,transaction_id, payment_amount,currency_code, payment_status, invoice_id, product_name, createdtime) VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->bind_param(
             'isdsssss',
@@ -80,7 +85,7 @@ function addPayment($data)
         );
         $stmt->execute();
         $stmt->close();
-		
+
         return $db->insert_id;
     }
 

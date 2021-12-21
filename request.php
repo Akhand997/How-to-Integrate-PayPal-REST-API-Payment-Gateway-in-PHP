@@ -6,9 +6,8 @@ use PayPal\Api\Payment;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
 use PayPal\Api\ItemList;
-use PayPal\Api\ShippingAddress;
 
-require 'config.php';
+require 'pconfig.php';
 
 if (empty($_POST['item_number'])) {
     throw new Exception('This script should not be called directly, expected post data');
@@ -24,13 +23,9 @@ $amountPayable = $_POST['amount'];
 $product_name = $_POST['item_name'];
 $item_code = $_POST['item_number'];
 $description = 'Paypal transaction';
-$recipient_name = $_POST['recipient_name'];
 $invoiceNumber = uniqid();
 $my_items = array(
 	array('name'=> $product_name, 'quantity'=> $item_qty, 'price'=> $amountPayable, 'sku'=> $item_code, 'currency'=> $currency)
-);
-$address = array(
-	array('recipient_name'=> $recipient_name)
 );
 
 
@@ -40,9 +35,6 @@ $amount->setCurrency($currency)
 
 $items = new ItemList();
 $items->setItems($my_items);
-
-$shipping_address = new ShippingAddress();
-$shipping_address->setRecipientName($address);
 
 $transaction = new Transaction();
 $transaction->setAmount($amount)

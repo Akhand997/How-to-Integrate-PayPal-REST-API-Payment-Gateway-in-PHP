@@ -27,6 +27,7 @@ include_once 'db_connection.php';
       <h4>Product Information</h4>
       <p>Product id: <?php echo $row['product_id']; ?></p>
       <p>Product Name: <?php echo $row['product_name']; ?></p>
+      <p>Purchase Date: <?php echo $row['createdtime']; ?></p>
     </div>
   </div>
 </body>
